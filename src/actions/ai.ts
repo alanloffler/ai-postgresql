@@ -19,7 +19,6 @@ export async function generateQuery(input: string) {
       }),
     });
 
-    console.log(result.object.query);
     return result.object.query;
   } catch (error) {
     console.log(error);
