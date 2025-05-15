@@ -6,16 +6,26 @@ import {
   TableHeader,
   TableRow,
 } from "@components/ui/table";
-import type { IProfessional } from "@interfaces/professional.interface";
+import { useEffect, useState } from "react";
+import type { ICounter } from "../types/counter.type";
+import type { IProfessional } from "../types/professional.type";
+import type { IResult } from "../types/result.type";
 
 interface DataTableProps {
-  data: IProfessional[] | null;
+  data: IResult | null;
 }
 
 export function DataTable({ data }: DataTableProps) {
+  const [dataType, setDataType] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const isProfessionalData = data && "firstname" in data[0];
+    setDataType(isProfessionalData ? "table" : "counter");
+  }, [data]);
+
   if (!data || data === null) return;
 
-  if (data.length === 0)
+  if (Array.isArray(data) && data.length === 0)
     return (
       <p className="w-fit mx-auto px-2.5 py-2 rounded-md font-semibold bg-amber-200 text-amber-600">
         No hay resultados
@@ -26,24 +36,40 @@ export function DataTable({ data }: DataTableProps) {
     <main>
       <Table>
         <TableHeader className="bg-gray-200">
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Nombre</TableHead>
-            <TableHead>Apellido</TableHead>
-            <TableHead>Especialización</TableHead>
-            <TableHead>Disponible</TableHead>
-          </TableRow>
+          {dataType === "table" ? (
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Nombre</TableHead>
+              <TableHead>Apellido</TableHead>
+              <TableHead>Especialización</TableHead>
+              <TableHead>Disponible</TableHead>
+            </TableRow>
+          ) : (
+            <TableRow>
+              <TableHead>Cantidad</TableHead>
+            </TableRow>
+          )}
         </TableHeader>
         <TableBody>
-          {data?.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>{item.id}</TableCell>
-              <TableCell>{item.firstname}</TableCell>
-              <TableCell>{item.lastname}</TableCell>
-              <TableCell>{item.specialization}</TableCell>
-              <TableCell>{item.available ? "Sí" : "No"}</TableCell>
-            </TableRow>
-          ))}
+          {data && dataType === "table"
+            ? (data as IProfessional[]).map((item: IProfessional) => {
+                return (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.id}</TableCell>
+                    <TableCell>{item.firstname}</TableCell>
+                    <TableCell>{item.lastname}</TableCell>
+                    <TableCell>{item.specialization}</TableCell>
+                    <TableCell>{item.available ? "Sí" : "No"}</TableCell>
+                  </TableRow>
+                );
+              })
+            : (data as ICounter[]).map((item: ICounter) => {
+                return (
+                  <TableRow key={crypto.randomUUID()}>
+                    <TableCell>{item.count}</TableCell>
+                  </TableRow>
+                );
+              })}
         </TableBody>
       </Table>
     </main>
