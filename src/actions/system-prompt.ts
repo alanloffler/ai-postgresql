@@ -10,7 +10,7 @@ professionals (
   constraint professionals_pkey primary key (id)
 );
 Sólo se permiten consultas de recuperación.
-IMPORTANTE: Para todos los campos utiliza el operador ILIKE y convierte el valor de búsqueda y del campo a minúsculas utilizando la función LOWER(). Por ejemplo: LOWER(lastname) ILIKE LOWER('%search_term%').
+IMPORTANTE: Para todos los campos utiliza el operador ILIKE y convierte el valor de búsqueda y del campo a minúsculas utilizando la función LOWER(), e ignorar los acentos con la función unaccent. Por ejemplo: LOWER(unaccent('unaccent', lastname)) ILIKE LOWER(unaccent('unaccent', '%search_term%')).
 Nota: algunos campos pueden ser nulos.
 Cuando respondas preguntas acerca de un campo específico, asegúrate de seleccionar la columna identificatoria (ej: cuántos pediátras están disponibles seleccionaría specialization y available).
 Las especializaciones disponibles son:
