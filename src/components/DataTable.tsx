@@ -25,6 +25,8 @@ export function DataTable({ data, isLoading }: DataTableProps) {
     setDataType(isProfessionalData ? "table" : "counter");
   }, [data]);
 
+  if (!data) return;
+
   if (isLoading) {
     return (
       <div className="w-full texte-center py-8">
