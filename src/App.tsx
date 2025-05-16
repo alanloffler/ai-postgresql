@@ -7,6 +7,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { generateQuery } from "./actions/ai";
 import type { IResult } from "./types/result.type.ts";
+import { useGenerateQuery } from "@hooks/useGenerateQuery.ts";
+import { useProfessionals } from "@hooks/useProfessionals.ts";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -15,28 +17,25 @@ const supabase = createClient(
 
 function App() {
   const [inputValue, setInputValue] = useState<string>("");
-  const [sqlData, setSqlData] = useState<IResult | null>(null);
-
-  async function getProfessionals(query?: string): Promise<void> {
-    const { data, error } = await supabase.rpc("execute_sql", {
-      query_text: query,
-    });
-
-    if (error) console.log(error);
-    console.log(data);
-
-    setSqlData(data);
-  }
+  const { generateQuery, isGenerating } = useGenerateQuery();
+  const { data, executeSql, loading } = useProfessionals(supabase);
 
   async function handleSubmit() {
+    if (!inputValue.trim()) {
+      toast.error("Debes ingresar una consulta");
+      return;
+    }
+
     try {
-      throw new Error();
       const query = await generateQuery(inputValue);
-      console.log(query);
-      await getProfessionals(query.slice(0, -1));
+
+      if (query) {
+        const formattedQuery = query.endsWith(";") ? query.slice(0, -1) : query;
+        await executeSql(formattedQuery);
+      }
     } catch (error) {
-      toast.error("Error generando query");
-      console.error("Error generating query:", error);
+      toast.error("Error generando la consulta");
+      console.error("Error generando la consulta:", error);
     }
   }
 
@@ -52,10 +51,11 @@ function App() {
           <CardContent className="space-y-8">
             <Search
               input={inputValue}
+              isLoading={isGenerating || loading}
               setInput={setInputValue}
               submit={handleSubmit}
             />
-            <DataTable data={sqlData} />
+            <DataTable data={data} isLoading={isGenerating || loading} />
           </CardContent>
         </Card>
       </main>
