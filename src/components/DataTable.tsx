@@ -19,7 +19,8 @@ export function DataTable({ data }: DataTableProps) {
   const [dataType, setDataType] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    const isProfessionalData = data && "firstname" in data[0];
+    const isProfessionalData =
+      data && data.length > 0 && "firstname" in data[0];
     setDataType(isProfessionalData ? "table" : "counter");
   }, [data]);
 
@@ -36,7 +37,7 @@ export function DataTable({ data }: DataTableProps) {
     <main>
       <Table>
         <TableHeader className="bg-gray-200">
-          {dataType === "table" ? (
+          {data && dataType === "table" ? (
             <TableRow>
               <TableHead>ID</TableHead>
               <TableHead>Nombre</TableHead>
