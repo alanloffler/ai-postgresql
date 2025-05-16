@@ -3,11 +3,15 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { systemPrompt } from "./system-prompt.ts";
 
-export async function generateQuery(input: string) {
-  const openai = createOpenAI({
-    compatibility: "strict",
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  });
+const openai = createOpenAI({
+  compatibility: "strict",
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+});
+
+export async function generateQuery(input: string): Promise<string> {
+  if (!input.trim()) {
+    throw new Error("El input no puede estar vacío");
+  }
 
   try {
     const result = await generateObject({
@@ -19,9 +23,11 @@ export async function generateQuery(input: string) {
       }),
     });
 
+    console.log(result.object.query);
+
     return result.object.query;
   } catch (error) {
     console.log(error);
-    throw new Error("Failed fetching database");
+    throw new Error("AI | Error generando la consulta SQL");
   }
 }
