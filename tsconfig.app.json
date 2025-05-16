@@ -26,6 +26,7 @@
     /* Shadcn components */
     "baseUrl": ".",
     "paths": {
+      "@/*": ["./src/*"],
       "@components/*": ["./src/components/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@lib/*": ["./src/lib/*"],
