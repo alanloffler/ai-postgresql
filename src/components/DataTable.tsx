@@ -13,9 +13,10 @@ import type { IResult } from "../types/result.type";
 
 interface DataTableProps {
   data: IResult | null;
+  isLoading: boolean;
 }
 
-export function DataTable({ data }: DataTableProps) {
+export function DataTable({ data, isLoading }: DataTableProps) {
   const [dataType, setDataType] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -24,14 +25,21 @@ export function DataTable({ data }: DataTableProps) {
     setDataType(isProfessionalData ? "table" : "counter");
   }, [data]);
 
-  if (!data || data === null) return;
-
-  if (Array.isArray(data) && data.length === 0)
+  if (isLoading) {
     return (
-      <p className="w-fit mx-auto px-2.5 py-2 rounded-md font-semibold bg-amber-200 text-amber-600">
-        No hay resultados
-      </p>
+      <div className="w-full texte-center py-8">
+        <p className="text-muted-foreground">Generando consulta...</p>
+      </div>
     );
+  }
+
+  if (data && data.length === 0) {
+    return (
+      <div className="w-full text-center py-4">
+        <p className="text-muted-foreground">No hay resultados</p>
+      </div>
+    );
+  }
 
   return (
     <main>
