@@ -1,6 +1,7 @@
+import { Spinner } from "@assets/icons/spinner";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
-import type { Dispatch, SetStateAction, KeyboardEvent } from "react";
+import type { Dispatch, KeyboardEvent, SetStateAction } from "react";
 
 interface SearchProps {
   input: string;
@@ -32,7 +33,14 @@ export function Search({ input, setInput, submit, isLoading }: SearchProps) {
           onKeyDown={handleKeyDown}
         />
         <Button disabled={isLoading} type="submit">
-          {isLoading ? "Buscando" : "Buscar"}
+          {isLoading ? (
+            <div className="flex gap-2 items-center">
+              <Spinner />
+              <span>Buscando</span>
+            </div>
+          ) : (
+            "Buscar"
+          )}
         </Button>
       </section>
     </form>
