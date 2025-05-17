@@ -15,6 +15,7 @@ export const useProfessionals = (supabase: SupabaseClient) => {
       try {
         setLoading(true);
         setError(null);
+        setData(null);
 
         const { data: supabaseData, error: supabaseError } = await supabase.rpc(
           "execute_sql",
@@ -24,7 +25,7 @@ export const useProfessionals = (supabase: SupabaseClient) => {
         );
 
         if (supabaseError) throw new Error("Error ejecutando la consulta SQL");
-
+        console.log(supabaseData);
         setData(supabaseData);
         return supabaseData;
       } catch (error) {
