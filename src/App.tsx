@@ -1,14 +1,13 @@
 import { DataTable } from "@components/DataTable";
+import { Hints } from "@components/Hints";
 import { Search } from "@components/Search";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Toaster } from "@components/ui/sonner";
+import { useGenerateQuery } from "@hooks/useGenerateQuery.ts";
+import { useProfessionals } from "@hooks/useProfessionals.ts";
 import { createClient } from "@supabase/supabase-js";
 import { useState } from "react";
 import { toast } from "sonner";
-import { generateQuery } from "./actions/ai";
-import type { IResult } from "./types/result.type.ts";
-import { useGenerateQuery } from "@hooks/useGenerateQuery.ts";
-import { useProfessionals } from "@hooks/useProfessionals.ts";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -32,7 +31,7 @@ function App() {
       if (query) {
         const formattedQuery = query.endsWith(";") ? query.slice(0, -1) : query;
         await executeSql(formattedQuery);
-      }
+      } else return [];
     } catch (error) {
       toast.error("Error generando la consulta");
       console.error("Error generando la consulta:", error);
@@ -45,7 +44,7 @@ function App() {
         <Card className="w-full max-w-2xl">
           <CardHeader>
             <CardTitle className="font-bold text-2xl">
-              Consulta la Base de Datos
+              Profesionales - Base de Datos
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-8">
@@ -55,6 +54,7 @@ function App() {
               setInput={setInputValue}
               submit={handleSubmit}
             />
+            <Hints setInputValue={setInputValue} />
             <DataTable data={data} isLoading={isGenerating || loading} />
           </CardContent>
         </Card>
