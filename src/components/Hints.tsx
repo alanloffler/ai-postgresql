@@ -9,10 +9,11 @@ export function Hints({ setInputValue }: HintsProps) {
     { text: "Lista de todos los profesionales" },
     { text: "Profesionales cardiólogos" },
     { text: "Cantidad de psicopedagógas" },
+    { text: "Tipos de especializaciones" },
   ];
 
   return (
-    <section className="grid grid-cols-2 sm:flex gap-3">
+    <section className="grid grid-cols-2 sm:flex sm:justify-start gap-3">
       {hints.map((hint, index) => (
         <button
           className="w-fit px-2 py-1 rounded-md bg-zinc-100 text-muted-foreground text-xs"
